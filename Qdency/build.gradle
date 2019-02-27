@@ -1,0 +1,58 @@
+import com.android.build.gradle.api.LibraryVariant
+import com.google.common.base.Joiner
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+
+}
+
+final String projectAndroidStub = ':AndroidStub'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:support-annotations:28.0.0'
+    compile 'org.jetbrains:annotations-java5:15.0'
+    provided project(projectAndroidStub)
+}
+
+// Using Stub classes first when compiling.
+afterEvaluate {
+    project.android.libraryVariants.each { LibraryVariant variant ->
+        variant.javaCompile.doFirst { JavaCompile javaCompile ->
+            String projectAndroidStubPath = project.project(projectAndroidStub).projectDir.canonicalPath
+            println "projectAndroidStubPath: ${projectAndroidStubPath}"
+            File stubPath = javaCompile.classpath.find {
+                it.canonicalPath.startsWith(projectAndroidStubPath)
+            }
+            if (stubPath == null) {
+                throw new RuntimeException("reset bootclasspath error.")
+            }
+            println "stubPath: ${stubPath.getAbsolutePath()}"
+            println "bootClasspath: ${javaCompile.options.bootClasspath}"
+            javaCompile.options.setBootClasspath(Joiner.on(File.pathSeparator).join(stubPath, javaCompile.options.bootClasspath))
+        }
+    }
+}

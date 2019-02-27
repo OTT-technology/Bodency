@@ -1,0 +1,39 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gala.bodency.qdency">
+
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.NoTitleBar">
+
+        <activity
+            android:name="com.gala.bodency.hook.delegate.ActivityProxy"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="com.gala.bodency.hook.delegate.ActivityProxy" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.gala.bodency.hook.delegate.ServiceProxy">
+            <intent-filter>
+                <action android:name="com.gala.bodency.hook.delegate.ServiceProxy" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.gala.bodency.hook.delegate.ReceiverProxy"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.gala.bodency.hook.delegate.ReceiverProxy" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

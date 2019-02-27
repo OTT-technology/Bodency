@@ -1,0 +1,15 @@
+{
+  "four_main_android_app_components": [
+    "com.gala.bodency.research.MainActivity"
+  ],
+  "target_class": [
+    "com.gala.bodency.research.App",
+    "com.gala.bodency.hook.delegate.ActivityProxy",
+    "com.gala.bodency.hook.delegate.ServiceProxy",
+    "com.gala.bodency.hook.delegate.ReceiverProxy"
+  ],
+  "filter_super_class": [
+  ],
+  "filter_class": [
+  ]
+}

@@ -1,0 +1,80 @@
+import groovy.json.JsonSlurper
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.gala.bodency'
+
+android {
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.gala.bodency.research"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':Qdency')
+    compile 'com.android.support:multidex:1.0.1'
+    compile project(":annotation")
+    annotationProcessor project(":Compiler")
+}
+
+
+JsonSlurper jsonSlurper = new JsonSlurper()
+def bodencyConfig = jsonSlurper.parse(project.file('bodency-config.json'))
+android.defaultConfig.buildConfigField("boolean", "SUPPORT_ASYNC_MULTI_DEX", String.valueOf(true))
+android.defaultConfig.buildConfigField("String", "FOUR_MAIN_ANDROID_APP_COMPONENTS", listToString(bodencyConfig.four_main_android_app_components, ','))
+
+bodency {
+    classReportFile = project.file('multiDexList.txt')
+    methodReportFile = project.file('methodReport.txt')
+    targetClass = bodencyConfig.target_class
+    targetClass.addAll(bodencyConfig.four_main_android_app_components)
+    filterSuperClass = bodencyConfig.filter_super_class
+    filterClass = bodencyConfig.filter_class
+    methodNumber = true
+}
+
+android.defaultConfig.buildConfigField("boolean", "SUPPORT_ASYNC_MULTI_DEX", String.valueOf(true))
+android.defaultConfig.buildConfigField("String", "FOUR_MAIN_ANDROID_APP_COMPONENTS", listToString(bodencyConfig.four_main_android_app_components, ','))
+
+static String listToString(def stringList, def separator) {
+    if (stringList == null) {
+        return null
+    }
+    StringBuilder result = new StringBuilder("\"")
+    boolean flag = false
+    for (String string : stringList) {
+        if (flag) {
+            result.append(separator)
+        } else {
+            flag = true
+        }
+        result.append(string)
+    }
+    result.append("\"")
+    return result.toString()
+}

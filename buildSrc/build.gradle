@@ -1,0 +1,38 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+version = "1.0.0"
+group = "com.gala.bodency"
+archivesBaseName = "qiyi-tv"
+
+repositories {
+    mavenCentral()
+    jcenter()
+    google()
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+
+    compile fileTree(dir: "libs", includes: ['*.jar'])
+    compile 'com.android.tools.build:gradle:2.3.3'
+    compile group: 'com.google.guava', name: 'guava', version: '17.0'
+}
+
+compileGroovy {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    options.encoding = "UTF-8"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            repository(url: uri('../../plugins'))
+//            repository(url: uri('/Users/isos/Work/Projects/GradleDev/gradleplugins'))
+//            repository(url: uri('/Users/isos/Work/Projects/tv_trunk_r82789_dex_research/gradleplugins'))
+            repository(url: uri('/Users/isos/Work/Projects/trunk/gradleplugins'))
+        }
+    }
+}
