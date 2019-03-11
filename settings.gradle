@@ -1,1 +1,1 @@
-include ':app', ':Qdency', ':AndroidStub', ':Compiler', ':annotation'
+include ':app', ':Qdency', ':AndroidStub', ':Compiler', ':annotation', 'buildSrc'
